@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: get version
-        run: echo "::set-env name=GIT_TAG_NAME::${GITHUB_REF#refs/tags/}"
+        run: echo "GIT_TAG_NAME=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
       - name: setup rust
         run: rustup target add x86_64-unknown-linux-musl
       - name: build
@@ -30,6 +30,6 @@ jobs:
           strip "$outdir"/pqueue
           tar -czvf "${artifactdir}/${name}.tar.gz" -C target/work "$name"
       - name: create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: target/artifacts/*
